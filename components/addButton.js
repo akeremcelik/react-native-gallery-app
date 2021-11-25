@@ -2,9 +2,9 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const addButton = () => {
+const addButton = ({showModal}) => {
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={showModal}>
             <Ionicons name="add" size={40} color="white" />
         </TouchableOpacity>
     );
