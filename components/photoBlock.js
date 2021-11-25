@@ -9,11 +9,12 @@ const photoBlock = () => {
 
 const styles = StyleSheet.create({
     container: {
-        width: '33%',
-        height: '20%',
+        width: 125,
+        height: 125,
         backgroundColor: 'transparent',
         borderWidth: 1,
-        borderColor: 'black',
+        borderColor: 'gray',
+        borderRadius: 10,
         marginBottom: 5,
     }
 });

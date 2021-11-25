@@ -1,14 +1,21 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import _ from 'lodash';
 
 import PhotoBlock from '../components/photoBlock';
 
 const photosScreen = () => {
+    const [photos, setPhotos] = useState([]);
+    useEffect(() => {
+        setPhotos(_.times(15));
+    }, []);
+
     return (
-        <View style={styles.photos}>
-            {_.times(5).map((key) => <PhotoBlock key={key} />)}
-        </View>
+        <ScrollView>
+            <View style={styles.photos}>
+                {photos.map((key) => <PhotoBlock key={key} />)}
+            </View>
+        </ScrollView>
     );
 }
 
@@ -17,7 +24,9 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        padding: 5,
+        justifyContent: 'space-between',
+        paddingHorizontal: 5,
+        paddingVertical: 10
     }
 });
 
