@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import _ from 'lodash';
 
 import PhotoBlock from '../components/photoBlock';
+import AddButton from '../components/addButton';
 
 const photosScreen = () => {
     const [photos, setPhotos] = useState([]);
@@ -11,11 +12,14 @@ const photosScreen = () => {
     }, []);
 
     return (
-        <ScrollView>
-            <View style={styles.photos}>
-                {photos.map((key) => <PhotoBlock key={key} />)}
-            </View>
-        </ScrollView>
+        <View>
+            <ScrollView>
+                <View style={styles.photos}>
+                    {photos.map((key) => <PhotoBlock key={key} />)}
+                </View>
+            </ScrollView>
+            <AddButton />
+        </View>
     );
 }
 
