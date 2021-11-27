@@ -22,7 +22,7 @@ const photosScreen = () => {
                 </View>
             </ScrollView>
             <AddButton showModal={() => setAddPhotoModalVisibility(true)} />
-            {addPhotoModalVisibility && <AddPhotoModal hideModal={() => setAddPhotoModalVisibility(false)} />}
+            <AddPhotoModal hideModal={() => setAddPhotoModalVisibility(false)} addPhotoModalVisibility={addPhotoModalVisibility} />
         </View>
     );
 }
