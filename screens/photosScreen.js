@@ -5,6 +5,7 @@ import _ from 'lodash';
 import PhotoBlock from '../components/photoBlock';
 import AddButton from '../components/addButton';
 import AddPhotoModal from "../components/addPhotoModal";
+import imageStore from "../helpers/store/imageStore";
 
 const photosScreen = () => {
     const [photos, setPhotos] = useState([]);
@@ -12,6 +13,7 @@ const photosScreen = () => {
 
     useEffect(() => {
         setPhotos(_.times(15));
+        imageStore.askForPerm();
     }, []);
 
     return (
@@ -22,7 +24,8 @@ const photosScreen = () => {
                 </View>
             </ScrollView>
             <AddButton showModal={() => setAddPhotoModalVisibility(true)} />
-            <AddPhotoModal hideModal={() => setAddPhotoModalVisibility(false)} addPhotoModalVisibility={addPhotoModalVisibility} />
+            {addPhotoModalVisibility &&
+            <AddPhotoModal hideModal={() => setAddPhotoModalVisibility(false)} addPhotoModalVisibility={addPhotoModalVisibility} />}
         </View>
     );
 }
