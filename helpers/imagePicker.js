@@ -6,17 +6,19 @@ import { observer } from "mobx-react-lite";
 import imageStore from "../helpers/store/imageStore";
 
 const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-    });
+    if(await imageStore.askForPerm() === 'granted') {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
 
-    console.log(result);
+        console.log(result);
 
-    if (!result.cancelled) {
-        imageStore.setImage(result.uri);
+        if (!result.cancelled) {
+            imageStore.setImage(result.uri);
+        }
     }
 };
 

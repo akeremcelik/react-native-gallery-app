@@ -19,6 +19,8 @@ class ImageStore {
             if (status !== 'granted') {
                 alert('Sorry, we need camera roll permissions to make this work!');
             }
+
+            return status;
         }
 
     }

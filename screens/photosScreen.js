@@ -5,7 +5,6 @@ import _ from 'lodash';
 import PhotoBlock from '../components/photoBlock';
 import AddButton from '../components/addButton';
 import AddPhotoModal from "../components/addPhotoModal";
-import imageStore from "../helpers/store/imageStore";
 
 const photosScreen = () => {
     const [photos, setPhotos] = useState([]);
@@ -13,7 +12,6 @@ const photosScreen = () => {
 
     useEffect(() => {
         setPhotos(_.times(15));
-        imageStore.askForPerm();
     }, []);
 
     return (

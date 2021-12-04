@@ -9,7 +9,7 @@ import imagePicker from './../helpers/imagePicker';
 
 const AddPhotoModal = ({hideModal, addPhotoModalVisibility}) => {
     useEffect(() => {
-        imageStore.setImage('jsdhfkjdashdfjkas');
+        imageStore.setImage('test');
     }, []);
     console.log(imageStore.image);
 
@@ -24,7 +24,6 @@ const AddPhotoModal = ({hideModal, addPhotoModalVisibility}) => {
                 animationInTiming={500}
                 animationOutTiming={500}>
                 <View style={styles.insiderView}>
-                    <Text>{imageStore.image}</Text>
                     <TouchableOpacity onPress={hideModal} style={styles.closeButton}>
                         <Ionicons name="close-circle-sharp" size={30} color="brown" />
                     </TouchableOpacity>
