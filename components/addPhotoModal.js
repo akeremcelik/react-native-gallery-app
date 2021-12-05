@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Button, Image } from 'react-native';
 import Modal from "react-native-modal";
 import { Ionicons } from '@expo/vector-icons';
@@ -7,9 +7,14 @@ import { observer } from "mobx-react-lite";
 import imageStore from "../helpers/store/imageStore";
 import imagePicker from './../helpers/imagePicker';
 
+import {Picker} from '@react-native-picker/picker';
+import storage from './../helpers/firebase/storage';
+
 const AddPhotoModal = ({hideModal, addPhotoModalVisibility}) => {
+    const [album, setAlbum] = useState(0);
     useEffect(() => {
-        imageStore.setImage('test');
+        setAlbum(0);
+        imageStore.setImage(null);
     }, []);
     console.log(imageStore.image);
 
@@ -29,9 +34,29 @@ const AddPhotoModal = ({hideModal, addPhotoModalVisibility}) => {
                     </TouchableOpacity>
                     <Text style={styles.header}>Upload Photo</Text>
 
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                        <Button title="Pick an image from camera roll" onPress={imagePicker.pickImage} />
-                        {imageStore.image && <Image source={{ uri: imageStore.image }} style={{ width: 200, height: 200 }} />}
+                    <View style={{marginTop: 20}}>
+                        <Text>Album</Text>
+                        <View style={{borderWidth: 1, borderColor: '#ccc', borderRadius: 10}}>
+                            <Picker
+                            selectedValue={album}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setAlbum(itemValue)
+                            }
+                            mode="dropdown">
+                                <Picker.Item label="No Album" value="0" />
+                                <Picker.Item label="Test 1" value="1" />
+                                <Picker.Item label="Test 2" value="2" />
+                            </Picker>
+                        </View>
+
+                        <View style={{ marginTop: 20, alignItems: 'center', justifyContent: 'center' }}>
+                            <Button title="Pick an image" onPress={imagePicker.pickImage} color="orange" />
+                            {imageStore.image && <Image source={{ uri: imageStore.image }} style={styles.image} />}
+                        </View>
+                    </View>
+
+                    <View style={{position: 'absolute', bottom: 20, right: 20}}>
+                        <Button title="Upload" onPress={async () => await storage.uploadImage()} color="tomato" />
                     </View>
                 </View>
             </Modal>
@@ -56,6 +81,14 @@ const styles = StyleSheet.create({
         color: 'tomato',
         fontSize: 20,
         fontWeight: 'bold'
+    },
+    image: {
+        width: 200, 
+        height: 200, 
+        marginTop: 10,
+        borderWidth: 1,
+        borderColor: 'black',
+        borderRadius: 10
     }
 });
 

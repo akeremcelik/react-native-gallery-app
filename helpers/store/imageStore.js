@@ -13,6 +13,10 @@ class ImageStore {
         this.image = incImg;
     }
 
+    getImage() {
+        return this.image;
+    }
+
     async askForPerm() {
         if (Platform.OS !== 'web') {
             const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
