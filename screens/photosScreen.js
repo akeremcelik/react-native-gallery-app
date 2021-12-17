@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import {View, StyleSheet, ScrollView, FlatList} from 'react-native';
 import _ from 'lodash';
 
 import PhotoBlock from '../components/photoBlock';
 import AddButton from '../components/addButton';
 import AddPhotoModal from "../components/addPhotoModal";
 
+import { observer } from "mobx-react-lite";
+import imagesStore from "../helpers/store/imagesStore";
+
 const photosScreen = () => {
     const [photos, setPhotos] = useState([]);
     const [addPhotoModalVisibility, setAddPhotoModalVisibility] = useState(false);
 
     useEffect(() => {
-        setPhotos(_.times(15));
-    }, []);
+        setPhotos([...imagesStore.images])
+    }, [imagesStore.images]);
 
     return (
-        <View>
-            <ScrollView>
-                <View style={styles.photos}>
-                    {photos.map((key) => <PhotoBlock key={key} />)}
-                </View>
-            </ScrollView>
+        <View style={styles.photos}>
+            <FlatList
+                numColumns={3}
+                data={photos}
+                renderItem={({item}) => <PhotoBlock item={item} />}
+                keyExtractor={(item, index) => `addition-${index.toString()}`}
+            />
             <AddButton showModal={() => setAddPhotoModalVisibility(true)} />
             {addPhotoModalVisibility &&
             <AddPhotoModal hideModal={() => setAddPhotoModalVisibility(false)} addPhotoModalVisibility={addPhotoModalVisibility} />}
@@ -39,4 +43,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default photosScreen;
+export default observer(photosScreen);
