@@ -56,7 +56,7 @@ const AddPhotoModal = ({hideModal, addPhotoModalVisibility}) => {
                     </View>
 
                     <View style={{position: 'absolute', bottom: 20, right: 20}}>
-                        <Button title="Upload" onPress={async () => await storage.uploadImage()} color="tomato" />
+                        <Button title="Upload" onPress={async () => await storage.uploadImage() === true && hideModal()} color="tomato" />
                     </View>
                 </View>
             </Modal>
