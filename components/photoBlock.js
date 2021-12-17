@@ -1,9 +1,9 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, View, Image } from "react-native";
 
-const photoBlock = ({item}) => {
+const photoBlock = ({item, showModal}) => {
     return(
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={showModal}>
             <Image style={styles.image} source={{uri:item}} />
         </TouchableOpacity>
     );

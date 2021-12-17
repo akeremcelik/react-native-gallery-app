@@ -14,6 +14,10 @@ class ImagesStore {
     addImage(pic) {
         this.images = [...this.images, pic];
     }
+
+    deleteImage(pic) {
+        this.images = this.images.filter(img => img != pic);
+    }
 }
 const imagesStore = new ImagesStore()
 export default imagesStore;

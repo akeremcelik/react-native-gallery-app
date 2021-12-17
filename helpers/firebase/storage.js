@@ -34,4 +34,15 @@ const retrieveImages = async () => {
     imagesStore.setImages(pictures);
 }
 
-export default {uploadImage, retrieveImages}
+const deleteImage = async (url) => {
+    try {
+        let imageRef = await firebase.storage().refFromURL(url);
+        await imageRef.delete();
+        imagesStore.deleteImage(url);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+export default {uploadImage, retrieveImages, deleteImage}
