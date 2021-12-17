@@ -19,12 +19,14 @@ const photosScreen = () => {
 
     return (
         <View style={styles.photos}>
-            <FlatList
-                numColumns={3}
-                data={photos}
-                renderItem={({item}) => <PhotoBlock item={item} />}
-                keyExtractor={(item, index) => `addition-${index.toString()}`}
-            />
+            <View style={{flex: 1}}>
+                <FlatList
+                    numColumns={3}
+                    data={photos}
+                    renderItem={({item}) => <PhotoBlock item={item} />}
+                    keyExtractor={(item, index) => `addition-${index.toString()}`}
+                />
+            </View>
             <AddButton showModal={() => setAddPhotoModalVisibility(true)} />
             {addPhotoModalVisibility &&
             <AddPhotoModal hideModal={() => setAddPhotoModalVisibility(false)} addPhotoModalVisibility={addPhotoModalVisibility} />}

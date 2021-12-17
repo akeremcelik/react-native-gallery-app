@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Button, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Button, Image, ActivityIndicator } from 'react-native';
 import Modal from "react-native-modal";
 import { Ionicons } from '@expo/vector-icons';
 
@@ -12,22 +12,38 @@ import storage from './../helpers/firebase/storage';
 
 const AddPhotoModal = ({hideModal, addPhotoModalVisibility}) => {
     const [album, setAlbum] = useState(0);
+    const [activityIndicator, setActivityIndicator] = useState(false);
     useEffect(() => {
         setAlbum(0);
         imageStore.setImage(null);
     }, []);
     console.log(imageStore.image);
 
+    const uploadImageEvent = async () => {
+        setActivityIndicator(true);
+        let result = await storage.uploadImage();
+        if(result === true) {
+            hideModal();
+        }
+        setActivityIndicator(false);
+    }
+
+    const hideDependingState = () => {
+        if(!activityIndicator)
+            hideModal();
+    }
+
     return (
         <View>
             <Modal
                 isVisible={addPhotoModalVisibility}
-                onBackButtonPress={hideModal}
-                onBackdropPress={hideModal}
+                onBackButtonPress={hideDependingState}
+                onBackdropPress={hideDependingState}
                 animationIn={"zoomIn"}
                 animationOut={"zoomOut"}
                 animationInTiming={500}
                 animationOutTiming={500}>
+                {!activityIndicator ?
                 <View style={styles.insiderView}>
                     <TouchableOpacity onPress={hideModal} style={styles.closeButton}>
                         <Ionicons name="close-circle-sharp" size={30} color="brown" />
@@ -56,9 +72,14 @@ const AddPhotoModal = ({hideModal, addPhotoModalVisibility}) => {
                     </View>
 
                     <View style={{position: 'absolute', bottom: 20, right: 20}}>
-                        <Button title="Upload" onPress={async () => await storage.uploadImage() === true && hideModal()} color="tomato" />
+                        <Button title="Upload" onPress={uploadImageEvent} color="tomato" />
                     </View>
                 </View>
+                :
+                <View style={styles.indicatorContainer}>
+                    <ActivityIndicator size="large" color="#fff" />
+                </View>
+                }
             </Modal>
         </View>
     )
@@ -89,6 +110,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         borderRadius: 10
+    },
+    indicatorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 
