@@ -5,14 +5,24 @@ import { v4 as uuid } from 'uuid';
 
 import imageStore from "./../store/imageStore";
 import imagesStore from "./../store/imagesStore";
+import { times } from 'lodash';
 
 const uploadImage = async() => {
     if(imageStore.getImage() !== null) {
         try {
             const response = await fetch(imageStore.getImage());
             const blob = await response.blob();
-            let ref = firebase.storage().ref().child("/images/" + uuid());
+            let imageName = uuid();
+            let ref = firebase.storage().ref().child("/images/" + imageName);
             await ref.put(blob);
+
+            await firebase.firestore()
+            .collection('images')
+            .doc(imageName)
+            .set({
+                album_id: parseInt(imageStore.album_id),
+                datetime: new Date()
+            })
 
             let pic = await ref.getDownloadURL();
             imagesStore.addImage(pic);
@@ -29,8 +39,14 @@ const uploadImage = async() => {
 }
 
 const retrieveImages = async () => {
+    /*
     let list = await firebase.storage().ref().child('images').list()
     let pictures = await Promise.all(list.items.map((pics) => firebase.storage().ref().child(pics.fullPath).getDownloadURL()))
+    imagesStore.setImages(pictures);
+    */
+    
+    let images = await firebase.firestore().collection('images').orderBy('datetime', 'desc').get();
+    let pictures = await Promise.all(images.docs.map((pics) => firebase.storage().ref().child('images/' + pics.id).getDownloadURL()));
     imagesStore.setImages(pictures);
 }
 
@@ -38,6 +54,16 @@ const deleteImage = async (url) => {
     try {
         let imageRef = await firebase.storage().refFromURL(url);
         await imageRef.delete();
+        
+        let u1 = url.indexOf('%2F');
+        let u2 = url.indexOf('?');
+        let imageName = url.substring(u1+3, u2);
+
+        await firebase.firestore()
+        .collection('images')
+        .doc(imageName)
+        .delete();
+        
         imagesStore.deleteImage(url);
         return true;
     } catch (e) {
