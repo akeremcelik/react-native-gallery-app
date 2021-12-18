@@ -17,7 +17,10 @@ const AddPhotoModal = ({hideModal, addPhotoModalVisibility}) => {
         setAlbum(0);
         imageStore.setImage(null);
     }, []);
-    console.log(imageStore.image);
+
+    useEffect(() => {
+        imageStore.setAlbumID(album);
+    }, [album]);
 
     const uploadImageEvent = async () => {
         setActivityIndicator(true);

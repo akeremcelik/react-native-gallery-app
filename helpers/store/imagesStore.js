@@ -12,7 +12,7 @@ class ImagesStore {
     }
 
     addImage(pic) {
-        this.images = [...this.images, pic];
+        this.images = [pic, ...this.images];
     }
 
     deleteImage(pic) {

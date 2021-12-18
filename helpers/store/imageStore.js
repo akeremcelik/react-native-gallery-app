@@ -8,6 +8,7 @@ class ImageStore {
     }
 
     image = null;
+    album_id = 0;
 
     setImage(incImg) {
         this.image = incImg;
@@ -15,6 +16,10 @@ class ImageStore {
 
     getImage() {
         return this.image;
+    }
+
+    setAlbumID(albumID) {
+        this.album_id = albumID;
     }
 
     async askForPerm() {
