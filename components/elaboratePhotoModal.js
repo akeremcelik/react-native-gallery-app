@@ -27,7 +27,7 @@ const elaboratePhotoModal = ({hideModal, eloboratePhotoModalVisibility, selected
 
                 <View style={styles.insiderView}>
                     <TouchableOpacity onPress={hideModal} style={styles.closeButton}>
-                        <Ionicons name="close-circle-sharp" size={30} color="brown"/>
+                        <Ionicons name="close-circle-sharp" size={30} color="white"/>
                     </TouchableOpacity>
 
                     <Image source={{uri: selectedItem}} style={styles.image}/>
@@ -49,14 +49,11 @@ const elaboratePhotoModal = ({hideModal, eloboratePhotoModalVisibility, selected
 const styles = StyleSheet.create({
     closeButton: {
         position: 'absolute',
-        right: 0,
-        top: 0
+        right: -10,
+        top: -10,
+        zIndex: 1
     },
     insiderView: {
-        flex: 1,
-        padding: 40,
-        backgroundColor: 'white',
-        borderWidth: 1,
         borderRadius: 10
     },
     header: {
