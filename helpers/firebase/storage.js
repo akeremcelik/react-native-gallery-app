@@ -7,6 +7,8 @@ import imageStore from "./../store/imageStore";
 import imagesStore from "./../store/imagesStore";
 import { times } from 'lodash';
 
+import firestore from './firestore';
+
 const uploadImage = async() => {
     if(imageStore.getImage() !== null) {
         try {
@@ -15,14 +17,7 @@ const uploadImage = async() => {
             let imageName = uuid();
             let ref = firebase.storage().ref().child("/images/" + imageName);
             await ref.put(blob);
-
-            await firebase.firestore()
-            .collection('images')
-            .doc(imageName)
-            .set({
-                album_id: parseInt(imageStore.album_id),
-                datetime: new Date()
-            })
+            await firestore.uploadImage(imageName, imageStore.album_id);
 
             let pic = await ref.getDownloadURL();
             imagesStore.addImage(pic);
@@ -45,7 +40,7 @@ const retrieveImages = async () => {
     imagesStore.setImages(pictures);
     */
     
-    let images = await firebase.firestore().collection('images').orderBy('datetime', 'desc').get();
+    let images = await firestore.retrieveImages();
     let pictures = await Promise.all(images.docs.map((pics) => firebase.storage().ref().child('images/' + pics.id).getDownloadURL()));
     imagesStore.setImages(pictures);
 }
@@ -59,10 +54,7 @@ const deleteImage = async (url) => {
         let u2 = url.indexOf('?');
         let imageName = url.substring(u1+3, u2);
 
-        await firebase.firestore()
-        .collection('images')
-        .doc(imageName)
-        .delete();
+        await firestore.deleteImage(imageName);
         
         imagesStore.deleteImage(url);
         return true;
