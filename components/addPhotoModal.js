@@ -9,6 +9,7 @@ import imagePicker from './../helpers/imagePicker';
 
 import {Picker} from '@react-native-picker/picker';
 import storage from './../helpers/firebase/storage';
+import albumsStore from '../helpers/store/albumsStore';
 
 const AddPhotoModal = ({hideModal, addPhotoModalVisibility}) => {
     const [album, setAlbum] = useState(0);
@@ -62,9 +63,7 @@ const AddPhotoModal = ({hideModal, addPhotoModalVisibility}) => {
                                 setAlbum(itemValue)
                             }
                             mode="dropdown">
-                                <Picker.Item label="No Album" value="0" />
-                                <Picker.Item label="Test 1" value="1" />
-                                <Picker.Item label="Test 2" value="2" />
+                                {albumsStore.albums.map((album) => <Picker.Item label={album.name} value={album.id} key={album.id} />)}
                             </Picker>
                         </View>
 

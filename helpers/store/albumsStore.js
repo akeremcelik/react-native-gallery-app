@@ -6,17 +6,22 @@ class AlbumsStore {
     }
 
     albums = [];
+    maxAlbumID = 0;
 
     setAlbums(incAlbums) {
         this.albums = incAlbums;
     }
 
     addAlbum(album) {
-        this.albums = [album, ...this.albums];
+        this.albums = [...this.albums, album];
     }
 
     deleteAlbum(album) {
         this.albums = this.albums.filter(alb => alb != album);
+    }
+
+    setMaxAlbumID(id) {
+        this.maxAlbumID = id;
     }
 }
 const albumsStore = new AlbumsStore()

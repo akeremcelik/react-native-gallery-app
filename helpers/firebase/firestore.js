@@ -25,8 +25,30 @@ const retrieveImages = () => {
 const retrieveAlbums = async () => {
     let albumsArr = [];
     let albums = await firebase.firestore().collection('albums').get();
-    let albumsProceed = await Promise.all(albums.docs.map((album) => albumsArr.push({id: album.data().id, color: album.data().color, name: album.id})));
+    let albumsProceed = await Promise.all(albums.docs.map((album) => {
+        albumsArr.push({id: album.data().id, color: album.data().color, name: album.id})
+        album.data().id > albumsStore.maxAlbumID && albumsStore.setMaxAlbumID(album.data().id)
+    }));
     albumsStore.setAlbums([{id: 0, color: "#fff", name: "No Album"}, ...albumsArr]);
 }
 
-export default {uploadImage, deleteImage, retrieveImages, retrieveAlbums}
+const createAlbum = async (album) => {
+    if(album.name !== '') {
+        try {
+            await firebase.firestore().collection('albums').doc(album.name).set({
+                color: album.color,
+                id: albumsStore.maxAlbumID+1
+            });
+            albumsStore.addAlbum(album);
+            return true;
+        } catch (error) {
+            alert('Something went wrong')
+            return false;
+        }
+    } else {
+        alert('Album name is required');
+        return false;
+    }
+}
+
+export default {uploadImage, deleteImage, retrieveImages, retrieveAlbums, createAlbum}
