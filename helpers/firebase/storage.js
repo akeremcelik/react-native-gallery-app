@@ -53,7 +53,6 @@ const deleteImage = async (url) => {
         let u1 = url.indexOf('%2F');
         let u2 = url.indexOf('?');
         let imageName = url.substring(u1+3, u2);
-
         await firestore.deleteImage(imageName);
         
         imagesStore.deleteImage(url);
