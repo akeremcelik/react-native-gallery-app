@@ -62,4 +62,19 @@ const deleteImage = async (url) => {
     }
 }
 
-export default {uploadImage, retrieveImages, deleteImage}
+const deleteImageByAlbumID = async (id) => {
+    try {
+        let images = await firebase.firestore().collection('images').get();
+        await Promise.all(images.docs.map((pics) => {
+            if(pics.data().album_id === id) {
+                firebase.storage().ref().child('images/' + pics.id).delete()
+                imagesStore.deleteImageIfIncludes(pics.id)
+                firestore.deleteImage(pics.id)
+            }
+        }));
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export default {uploadImage, retrieveImages, deleteImage, deleteImageByAlbumID}

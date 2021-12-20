@@ -18,6 +18,10 @@ class ImagesStore {
     deleteImage(pic) {
         this.images = this.images.filter(img => img != pic);
     }
+
+    deleteImageIfIncludes(pic) {
+        this.images = this.images.filter(img => !img.includes(pic));
+    }
 }
 const imagesStore = new ImagesStore()
 export default imagesStore;

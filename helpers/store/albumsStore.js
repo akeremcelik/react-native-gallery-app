@@ -17,7 +17,7 @@ class AlbumsStore {
     }
 
     deleteAlbum(album) {
-        this.albums = this.albums.filter(alb => alb != album);
+        this.albums = this.albums.filter(alb => alb.id != album);
     }
 
     setMaxAlbumID(id) {
