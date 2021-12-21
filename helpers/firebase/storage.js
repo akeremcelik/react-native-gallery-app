@@ -5,7 +5,6 @@ import { v4 as uuid } from 'uuid';
 
 import imageStore from "./../store/imageStore";
 import imagesStore from "./../store/imagesStore";
-import { times } from 'lodash';
 
 import firestore from './firestore';
 

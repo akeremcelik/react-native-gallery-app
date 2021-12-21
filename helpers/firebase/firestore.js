@@ -63,10 +63,6 @@ const deleteAlbum = (name) => {
             .delete();
 }
 
-const retrieveConfigValue = () => {
-    return firebase.firestore().collection('albums').doc('config').data().value;
-}
-
 const updateConfigValue = (value) => {
     firebase.firestore().collection('albums').doc('config').set({
         value: value
@@ -95,4 +91,4 @@ const fetchImageAlbum = async (image) => {
     return album_id;
 }
 
-export default {uploadImage, deleteImage, retrieveImages, retrieveAlbums, createAlbum, deleteAlbum, retrieveConfigValue, updateConfigValue, updateImageAlbum, fetchImageAlbum}
+export default {uploadImage, deleteImage, retrieveImages, retrieveAlbums, createAlbum, deleteAlbum, updateConfigValue, updateImageAlbum, fetchImageAlbum}
