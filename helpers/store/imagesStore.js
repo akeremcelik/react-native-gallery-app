@@ -22,6 +22,10 @@ class ImagesStore {
     deleteImageIfIncludes(pic) {
         this.images = this.images.filter(img => !img.includes(pic));
     }
+
+    getImageAlbumID(img) {
+        return this.images.filter((img) => im)
+    }
 }
 const imagesStore = new ImagesStore()
 export default imagesStore;

@@ -3,8 +3,15 @@ import {View, Image, TouchableOpacity, Text, Button, ActivityIndicator, StyleShe
 import Modal from "react-native-modal";
 import {Ionicons} from "@expo/vector-icons";
 import storage from "./../helpers/firebase/storage";
+import albumsStore from "../helpers/store/albumsStore";
+import firestore from "../helpers/firebase/firestore";
+
+import { connectActionSheet } from '@expo/react-native-action-sheet';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const elaboratePhotoModal = ({hideModal, eloboratePhotoModalVisibility, selectedItem}) => {
+    const { showActionSheetWithOptions } = useActionSheet();
+
     const deletePhoto = async (selectedItem) => {
         let result = await storage.deleteImage(selectedItem);
         if(result === true) {
@@ -13,6 +20,26 @@ const elaboratePhotoModal = ({hideModal, eloboratePhotoModalVisibility, selected
             alert('Something went wrong');
         }
     }
+
+    const _onOpenActionSheet = async () => {
+        const options = albumsStore.albums.map((album) => album.name);
+        const destructiveButtonIndex = albumsStore.bringAlbumIndexFromID(await firestore.fetchImageAlbum(selectedItem))
+        const cancelButtonIndex = -1;
+
+        showActionSheetWithOptions(
+            {
+                options,
+                cancelButtonIndex,
+                destructiveButtonIndex,
+                autoFocus: true
+            },
+            async (buttonIndex) => {
+                if(buttonIndex !== -1) {
+                    await firestore.updateImageAlbum(selectedItem, options[buttonIndex]);
+                }
+            }
+        );
+    };
 
     return (
         <View>
@@ -32,7 +59,7 @@ const elaboratePhotoModal = ({hideModal, eloboratePhotoModalVisibility, selected
 
                     <Image source={{uri: selectedItem}} style={styles.image}/>
                     <View style={{flexDirection: "row", flexWrap: "wrap"}}>
-                        <TouchableOpacity style={[styles.button, {backgroundColor: 'blue'}]}>
+                        <TouchableOpacity style={[styles.button, {backgroundColor: 'blue'}]} onPress={_onOpenActionSheet}>
                             <Ionicons name="create" size={30} color="white"/>
                         </TouchableOpacity>
 
@@ -86,4 +113,5 @@ const styles = StyleSheet.create({
     }
 });
 
+const ConnectedApp = connectActionSheet(elaboratePhotoModal);
 export default elaboratePhotoModal;

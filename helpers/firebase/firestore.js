@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
 import albumsStore from '../store/albumsStore';
+import storage from "./storage";
 
 const uploadImage = (imageName, albumID) => {
     firebase.firestore()
@@ -73,4 +74,25 @@ const updateConfigValue = (value) => {
     albumsStore.setMaxAlbumID(value);
 }
 
-export default {uploadImage, deleteImage, retrieveImages, retrieveAlbums, createAlbum, deleteAlbum, retrieveConfigValue, updateConfigValue}
+const updateImageAlbum = (item, albumName) => {
+    let imageName = storage.bringImageNameFromUrl(item);
+    let album_id = albumsStore.bringAlbumFromName(albumName)[0].id;
+    firebase.firestore().collection('images').doc(imageName).update({
+        album_id: album_id
+    });
+}
+
+const fetchImageAlbum = async (image) => {
+    let album_id = 0;
+    let imageName = storage.bringImageNameFromUrl(image);
+    let images = await firebase.firestore().collection('images').get();
+    await Promise.all(images.docs.map((img) => {
+        if(img.id === imageName) {
+            album_id = img.data().album_id;
+        }
+    }));
+
+    return album_id;
+}
+
+export default {uploadImage, deleteImage, retrieveImages, retrieveAlbums, createAlbum, deleteAlbum, retrieveConfigValue, updateConfigValue, updateImageAlbum, fetchImageAlbum}

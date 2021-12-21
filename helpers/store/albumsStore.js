@@ -23,6 +23,14 @@ class AlbumsStore {
     setMaxAlbumID(id) {
         this.maxAlbumID = id;
     }
+
+    bringAlbumFromName(name) {
+        return this.albums.filter(alb => alb.name == name);
+    }
+
+    bringAlbumIndexFromID(id) {
+        return this.albums.findIndex(alb => alb.id == id);
+    }
 }
 const albumsStore = new AlbumsStore()
 export default albumsStore;

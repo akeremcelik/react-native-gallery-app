@@ -49,10 +49,8 @@ const deleteImage = async (url) => {
     try {
         let imageRef = await firebase.storage().refFromURL(url);
         await imageRef.delete();
-        
-        let u1 = url.indexOf('%2F');
-        let u2 = url.indexOf('?');
-        let imageName = url.substring(u1+3, u2);
+
+        let imageName = bringImageNameFromUrl(url);
         await firestore.deleteImage(imageName);
         
         imagesStore.deleteImage(url);
@@ -77,4 +75,11 @@ const deleteImageByAlbumID = async (id) => {
     }
 }
 
-export default {uploadImage, retrieveImages, deleteImage, deleteImageByAlbumID}
+const bringImageNameFromUrl = (url) => {
+    let u1 = url.indexOf('%2F');
+    let u2 = url.indexOf('?');
+    let imageName = url.substring(u1+3, u2);
+    return imageName;
+}
+
+export default {uploadImage, retrieveImages, deleteImage, deleteImageByAlbumID, bringImageNameFromUrl}
