@@ -3,7 +3,7 @@ import { TouchableOpacity, StyleSheet, View, Image, Text, Alert } from "react-na
 import { Ionicons } from '@expo/vector-icons';
 import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
 
-const albumBlock = ({item, deleteAlbum}) => {
+const albumBlock = ({item, deleteAlbum, onPress}) => {
     const deleteAlert = (id, name) => {
         Alert.alert(
             "Delete Album",
@@ -21,7 +21,7 @@ const albumBlock = ({item, deleteAlbum}) => {
 
     let color = item.color + '60';
     return(
-        <TouchableOpacity style={[styles.container, {backgroundColor: color}]}>
+        <TouchableOpacity style={[styles.container, {backgroundColor: color}]} onPress={onPress}>
             <View style={styles.iconView}>
                 <Ionicons name="open-outline" size={40} color="black" />
             </View>

@@ -14,8 +14,6 @@ const pickImage = async () => {
             quality: 1,
         });
 
-        console.log(result);
-
         if (!result.cancelled) {
             imageStore.setImage(result.uri);
         }

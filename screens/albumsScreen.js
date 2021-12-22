@@ -9,14 +9,13 @@ import AddAlbumModal from '../components/addAlbumModal';
 import firestore from "../helpers/firebase/firestore";
 import storage from "../helpers/firebase/storage";
 
-const albumsScreen = () => {
+const albumsScreen = ({navigation}) => {
     const [addAlbumModalVisibility, setAddAlbumModalVisibility] = useState(false);
     const deleteAlbum = async (id, name) => {
         await firestore.deleteAlbum(name);
         await storage.deleteImageByAlbumID(id);
         albumsStore.deleteAlbum(id);
     }
-    console.log(albumsStore.albums)
 
     return (
         <View style={styles.container}>
@@ -25,7 +24,7 @@ const albumsScreen = () => {
                 <FlatList
                     numColumns={2}
                     data={albumsStore.albums.slice()}
-                    renderItem={({item}) => <AlbumBlock item={item} deleteAlbum={deleteAlbum} />}
+                    renderItem={({item}) => <AlbumBlock item={item} deleteAlbum={deleteAlbum} onPress={() => navigation.navigate('Album Photos', {album_id: item.id})} />}
                     keyExtractor={(item, index) => `addition-${index.toString()}`}
                 />
             </View>

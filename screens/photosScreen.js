@@ -9,15 +9,22 @@ import EloboratePhotoModal from "../components/elaboratePhotoModal";
 
 import { observer } from "mobx-react-lite";
 import imagesStore from "../helpers/store/imagesStore";
+import storage from "../helpers/firebase/storage";
 
-const photosScreen = () => {
+const photosScreen = ({route}) => {
     const [photos, setPhotos] = useState([]);
     const [addPhotoModalVisibility, setAddPhotoModalVisibility] = useState(false);
     const [eloboratePhotoModalVisibility, setEloboratePhotoModalVisibility] = useState(false);
     const [selectedItem, setSelectedItem] = useState();
 
-    useEffect(() => {
-        setPhotos([...imagesStore.images])
+    const album_id = (route.params && route.params.album_id) ?? -1
+
+    useEffect( async () => {
+        if(album_id >= 0) {
+            setPhotos(await storage.retrieveImagesByAlbumID(album_id));
+        } else {
+            setPhotos([...imagesStore.images])
+        }
     }, [imagesStore.images]);
 
     const displayEloborateModal = (item) => {

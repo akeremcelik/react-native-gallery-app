@@ -44,6 +44,18 @@ const retrieveImages = async () => {
     imagesStore.setImages(pictures);
 }
 
+const retrieveImagesByAlbumID = async (id) => {
+    let images = await firestore.retrieveImages();
+    let pictures = await Promise.all(images.docs.map(async (pics) => {
+        return {
+            src: await firebase.storage().ref().child('images/' + pics.id).getDownloadURL(),
+            album_id: pics.data().album_id
+        }
+    }));
+
+    return pictures.filter((pic) => pic.album_id == id).map((pic) => pic.src);
+}
+
 const deleteImage = async (url) => {
     try {
         let imageRef = await firebase.storage().refFromURL(url);
@@ -81,4 +93,4 @@ const bringImageNameFromUrl = (url) => {
     return imageName;
 }
 
-export default {uploadImage, retrieveImages, deleteImage, deleteImageByAlbumID, bringImageNameFromUrl}
+export default {uploadImage, retrieveImages, deleteImage, deleteImageByAlbumID, bringImageNameFromUrl, retrieveImagesByAlbumID}
