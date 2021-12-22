@@ -2,8 +2,9 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet, View, Image, Text, Alert } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
+import albumsStore from "../helpers/store/albumsStore";
 
-const albumBlock = ({item, deleteAlbum, onPress}) => {
+const albumBlock = ({item, deleteAlbum, onPress, displayModal}) => {
     const deleteAlert = (id, name) => {
         Alert.alert(
             "Delete Album",
@@ -19,6 +20,11 @@ const albumBlock = ({item, deleteAlbum, onPress}) => {
         );
     }
 
+    const editAlbumFunc = () => {
+        albumsStore.setEditAlbumID(item.id);
+        displayModal();
+    }
+
     let color = item.color + '60';
     return(
         <TouchableOpacity style={[styles.container, {backgroundColor: color}]} onPress={onPress}>
@@ -32,6 +38,9 @@ const albumBlock = ({item, deleteAlbum, onPress}) => {
                     <Ionicons name="ellipsis-vertical-outline" size={20} color="black" />
                 </MenuTrigger>
                 <MenuOptions>
+                    <MenuOption onSelect={() => item.id != 0 && editAlbumFunc()} >
+                        <Text style={{color: 'black'}}>Edit</Text>
+                    </MenuOption>
                     <MenuOption onSelect={() => item.id != 0 && deleteAlert(item.id, item.name)} >
                         <Text style={{color: 'red'}}>Delete</Text>
                     </MenuOption>

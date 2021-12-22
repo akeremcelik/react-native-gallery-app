@@ -56,6 +56,39 @@ const createAlbum = async (album) => {
     }
 }
 
+const editAlbum = async (album) => {
+    if(album.name !== '') {
+        try {
+            let oldAlbum = albumsStore.albums.filter((alb) => alb.id === albumsStore.editAlbumID);
+            await firebase.firestore().collection('albums').doc(oldAlbum[0].name).delete();
+            await firebase.firestore().collection('albums').doc(album.name).set({
+                color: album.color,
+                id: oldAlbum[0].id
+            });
+
+            let albums = albumsStore.albums;
+            let ind = albumsStore.albums.findIndex((alb) => alb == oldAlbum[0]);
+            let newAlbum = {
+                color: album.color,
+                id: oldAlbum[0].id,
+                name: album.name
+            }
+
+            albums[ind] = newAlbum;
+            albumsStore.setAlbums(albums);
+
+            return true;
+        } catch (error) {
+            console.log(error)
+            alert('Something went wrong')
+            return false;
+        }
+    } else {
+        alert('Album name is required');
+        return false;
+    }
+}
+
 const deleteAlbum = (name) => {
     firebase.firestore()
             .collection('albums')
@@ -91,4 +124,4 @@ const fetchImageAlbum = async (image) => {
     return album_id;
 }
 
-export default {uploadImage, deleteImage, retrieveImages, retrieveAlbums, createAlbum, deleteAlbum, updateConfigValue, updateImageAlbum, fetchImageAlbum}
+export default {uploadImage, deleteImage, retrieveImages, retrieveAlbums, createAlbum, editAlbum, deleteAlbum, updateConfigValue, updateImageAlbum, fetchImageAlbum}

@@ -11,6 +11,8 @@ import storage from "../helpers/firebase/storage";
 
 const albumsScreen = ({navigation}) => {
     const [addAlbumModalVisibility, setAddAlbumModalVisibility] = useState(false);
+    const [editAlbumModalVisibility, setEditAlbumModalVisibility] = useState(false);
+
     const deleteAlbum = async (id, name) => {
         await firestore.deleteAlbum(name);
         await storage.deleteImageByAlbumID(id);
@@ -24,13 +26,15 @@ const albumsScreen = ({navigation}) => {
                 <FlatList
                     numColumns={2}
                     data={albumsStore.albums.slice()}
-                    renderItem={({item}) => <AlbumBlock item={item} deleteAlbum={deleteAlbum} onPress={() => navigation.navigate('Album Photos', {album_name: item.name, album_id: item.id})} />}
+                    renderItem={({item}) => <AlbumBlock item={item} deleteAlbum={deleteAlbum} onPress={() => navigation.navigate('Album Photos', {album_name: item.name, album_id: item.id})} displayModal={() => setEditAlbumModalVisibility(true)} />}
                     keyExtractor={(item, index) => `addition-${index.toString()}`}
                 />
             </View>
             <AddButton showModal={() => setAddAlbumModalVisibility(true)} />
             {addAlbumModalVisibility &&
                 <AddAlbumModal hideModal={() => setAddAlbumModalVisibility(false)} addAlbumModalVisibility={addAlbumModalVisibility} />}
+            {editAlbumModalVisibility &&
+                <AddAlbumModal hideModal={() => setEditAlbumModalVisibility(false)} addAlbumModalVisibility={editAlbumModalVisibility} editState={true} />}
         </View>
     );
 }

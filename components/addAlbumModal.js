@@ -1,20 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Button, ActivityIndicator, TextInput } from 'react-native';
 import Modal from "react-native-modal";
 import { Ionicons } from '@expo/vector-icons';
 import { ColorPicker } from 'react-native-color-picker';
 import firestore from '../helpers/firebase/firestore';
+import albumsStore from "../helpers/store/albumsStore";
 
-const addAlbumModal = ({hideModal, addAlbumModalVisibility}) => {
+const addAlbumModal = ({hideModal, addAlbumModalVisibility, editState}) => {
     const [activityIndicator, setActivityIndicator] = useState(false);
     const [album, setAlbum] = useState({
         name: '',
         color: '#ffea23'
     });
 
+    useEffect(() => {
+        if(editState) {
+            setAlbum({
+               name:  albumsStore.bringAlbumFromID(albumsStore.editAlbumID)[0].name,
+               color: albumsStore.bringAlbumFromID(albumsStore.editAlbumID)[0].color
+            });
+        }
+    }, []);
+
     const createAlbumEvent = async () => {
         setActivityIndicator(true);
         let result = await firestore.createAlbum(album);
+        if(result === true) {
+            hideModal();
+        }
+        setActivityIndicator(false);
+    }
+
+    const editAlbumEvent = async () => {
+        setActivityIndicator(true);
+        let result = await firestore.editAlbum(album);
         if(result === true) {
             hideModal();
         }
@@ -41,7 +60,7 @@ const addAlbumModal = ({hideModal, addAlbumModalVisibility}) => {
                     <TouchableOpacity onPress={hideModal} style={styles.closeButton}>
                         <Ionicons name="close-circle-sharp" size={30} color="brown" />
                     </TouchableOpacity>
-                    <Text style={styles.header}>Create Album</Text>
+                    <Text style={styles.header}>{editState ? 'Edit Album' : 'Create Album'}</Text>
 
                     <View style={{marginTop: 20, flex: 1}}>
                         <Text>Name</Text>
@@ -56,11 +75,15 @@ const addAlbumModal = ({hideModal, addAlbumModalVisibility}) => {
                             defaultColor={album.color}
                             onColorSelected={color => setAlbum({...album, color: color})}
                             style={{flex: 3/4, marginTop: 10}}
+                            //color={album.color}
                         />
                     </View>
 
                     <View style={{position: 'absolute', bottom: 20, right: 20}}>
-                        <Button title="Create" onPress={createAlbumEvent} color="tomato" />
+                        {editState ?
+                            <Button title="Edit" onPress={editAlbumEvent} color="tomato"/> :
+                            <Button title="Create" onPress={createAlbumEvent} color="tomato"/>
+                        }
                     </View>
                 </View>
                 :

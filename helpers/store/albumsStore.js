@@ -7,6 +7,7 @@ class AlbumsStore {
 
     albums = [];
     maxAlbumID = 0;
+    editAlbumID = 0;
 
     setAlbums(incAlbums) {
         this.albums = incAlbums;
@@ -30,6 +31,14 @@ class AlbumsStore {
 
     bringAlbumIndexFromID(id) {
         return this.albums.findIndex(alb => alb.id == id);
+    }
+
+    bringAlbumFromID(id) {
+        return this.albums.filter(alb => alb.id == id);
+    }
+
+    setEditAlbumID(id) {
+        this.editAlbumID = id;
     }
 }
 const albumsStore = new AlbumsStore()
