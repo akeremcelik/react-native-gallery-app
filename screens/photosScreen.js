@@ -11,17 +11,19 @@ import { observer } from "mobx-react-lite";
 import imagesStore from "../helpers/store/imagesStore";
 import storage from "../helpers/firebase/storage";
 
-const photosScreen = ({route}) => {
+const photosScreen = ({navigation, route}) => {
     const [photos, setPhotos] = useState([]);
     const [addPhotoModalVisibility, setAddPhotoModalVisibility] = useState(false);
     const [eloboratePhotoModalVisibility, setEloboratePhotoModalVisibility] = useState(false);
     const [selectedItem, setSelectedItem] = useState();
 
     const album_id = (route.params && route.params.album_id) ?? -1
+    const album_name = (route.params && route.params.album_name) ?? "Album Photos"
 
     useEffect( async () => {
         if(album_id >= 0) {
             setPhotos(await storage.retrieveImagesByAlbumID(album_id));
+            navigation.setOptions({title: album_name});
         } else {
             setPhotos([...imagesStore.images])
         }

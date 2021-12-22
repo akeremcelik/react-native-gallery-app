@@ -24,7 +24,7 @@ const albumsScreen = ({navigation}) => {
                 <FlatList
                     numColumns={2}
                     data={albumsStore.albums.slice()}
-                    renderItem={({item}) => <AlbumBlock item={item} deleteAlbum={deleteAlbum} onPress={() => navigation.navigate('Album Photos', {album_id: item.id})} />}
+                    renderItem={({item}) => <AlbumBlock item={item} deleteAlbum={deleteAlbum} onPress={() => navigation.navigate('Album Photos', {album_name: item.name, album_id: item.id})} />}
                     keyExtractor={(item, index) => `addition-${index.toString()}`}
                 />
             </View>

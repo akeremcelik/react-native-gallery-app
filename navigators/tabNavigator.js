@@ -1,31 +1,9 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-
-import PhotosScreen from '../screens/photosScreen';
-import AlbumsScreen from '../screens/albumsScreen';
-
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import stackNavigator from "./stackNavigator";
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
-
-const photosStack = () => {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name="Photos" component={PhotosScreen} />
-        </Stack.Navigator>
-    )
-}
-
-const albumsStack = () => {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name="Albums" component={AlbumsScreen} />
-            <Stack.Screen name="Album Photos" component={PhotosScreen} />
-        </Stack.Navigator>
-    )
-}
 
 export default function tabNavigator() {
     return (
@@ -34,11 +12,11 @@ export default function tabNavigator() {
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
 
-                    if (route.name === 'Photos') {
+                    if (route.name === 'Photos Tab') {
                         iconName = focused
                             ? 'image'
                             : 'image-outline';
-                    } else if (route.name === 'Albums') {
+                    } else if (route.name === 'Albums Tab') {
                         iconName = focused ? 'albums' : 'albums-outline';
                     }
 
@@ -48,8 +26,8 @@ export default function tabNavigator() {
                 tabBarInactiveTintColor: 'gray',
             })}
         >
-            <Tab.Screen name="Photos" component={photosStack} options={{ headerShown: false }} />
-            <Tab.Screen name="Albums" component={albumsStack} options={{ headerShown: false }} />
+            <Tab.Screen name="Photos Tab" component={stackNavigator.photosStack} options={{ headerShown: false, title: 'Photos' }} />
+            <Tab.Screen name="Albums Tab" component={stackNavigator.albumsStack} options={{ headerShown: false, title: 'Albums' }} />
         </Tab.Navigator>
     )
 }
